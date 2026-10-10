@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="ta">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historical Heroes</title>
+<style>
+body{font-family:Arial,sans-serif;text-align:center;background:#fff8e7;color:#542b13;padding:20px}
+.logo{font-size:65px}
+h1{color:#8b4513}
+button{background:#8b4513;color:white;padding:14px 20px;border:0;border-radius:10px;font-size:17px;margin:8px}
+p{font-size:18px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="logo">🏛️</div>
+<h1>Historical Heroes</h1>
+<p>வீர வரலாறுகளை அறிந்துகொள்வோம்!</p>
+<p>தமிழகத்தின் வீரர்களையும் வீராங்கனைகளையும் தெரிந்துகொள்வோம்.</p>
+<button onclick="showHero('வேலு நாச்சியார்')">வேலு நாச்சியார்</button>
+<button onclick="showHero('குயிலி')">குயிலி</button>
+<button onclick="showHero('வீரபாண்டிய கட்டபொம்மன்')">கட்டபொம்மன்</button>
+<h2 id="name">நமது வரலாற்று நாயகர்கள்</h2>
+<p id="info">ஒரு பெயரைத் தொட்டு அவர்களைப் பற்றி அறியுங்கள்.</p>
+<script>
+function showHero(hero){
+document.getElementById('name').innerText=hero;
+const info={
+'வேலு நாச்சியார்':'ஆங்கிலேயர்களை எதிர்த்துப் போராடிய சிவகங்கை அரசி.',
+'குயிலி':'வேலு நாச்சியாரின் படையில் வீரத்துடன் போரிட்ட வீராங்கனை.',
+'வீரபாண்டிய கட்டபொம்மன்':'ஆங்கிலேய ஆட்சியை எதிர்த்துப் போராடிய பாஞ்சாலங்குறிச்சி வீரர்.'
+};
+document.getElementById('info').innerText=info[hero];
+}
+</script>
+</body>
+</html>
