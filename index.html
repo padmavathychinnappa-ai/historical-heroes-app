@@ -1,35 +1,100 @@
-<!DOCTYPE html><html lang="ta">
+
+
+<!DOCTYPE html>
+<html lang="ta">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
 <title>Historical Heroes</title>
 <style>
-body{font-family:Arial,sans-serif;text-align:center;background:#fff8e7;color:#542b13;padding:20px}
-.logo{font-size:65px}
-h1{color:#8b4513}
-button{background:#8b4513;color:white;padding:14px 20px;border:0;border-radius:10px;font-size:17px;margin:8px}
-p{font-size:18px;line-height:1.6}
+*{box-sizing:border-box}
+body{margin:0;background:#111827;color:white;font-family:Arial,sans-serif}
+header{text-align:center;padding:28px 12px;background:#7f1d1d}
+.logo{font-size:54px}
+h1{margin:8px 0;color:#ffd166}
+header p{margin:8px}
+main{padding:16px;max-width:850px;margin:auto}
+.intro{text-align:center;padding:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:14px}
+.hero{background:#1f2937;border:1px solid #66512b;border-radius:14px;padding:16px 8px;text-align:center}
+.pic{font-size:48px}
+.hero h2{font-size:17px;min-height:40px}
+button{background:#fbbf24;color:#111827;border:0;border-radius:8px;padding:11px 14px;font-weight:bold;cursor:pointer}
+#details{display:none;margin-top:20px;background:#fff7ed;color:#1f2937;padding:20px;border-radius:14px;line-height:1.7}
+#details h2{color:#991b1b}
+footer{text-align:center;padding:25px;color:#fcd34d}
 </style>
 </head>
 <body>
-<div class="logo">🏛️</div>
-<h1>Historical Heroes</h1>
-<p>வீர வரலாறுகளை அறிந்துகொள்வோம்!</p>
-<p>தமிழகத்தின் வீரர்களையும் வீராங்கனைகளையும் தெரிந்துகொள்வோம்.</p>
-<button onclick="showHero('வேலு நாச்சியார்')">வேலு நாச்சியார்</button>
-<button onclick="showHero('குயிலி')">குயிலி</button>
-<button onclick="showHero('வீரபாண்டிய கட்டபொம்மன்')">கட்டபொம்மன்</button>
-<h2 id="name">நமது வரலாற்று நாயகர்கள்</h2>
-<p id="info">ஒரு பெயரைத் தொட்டு அவர்களைப் பற்றி அறியுங்கள்.</p>
+<header>
+  <div class="logo">🏹</div>
+  <h1>HISTORICAL HEROES</h1>
+  <p>தமிழர் வீர வரலாறு • Tamil History</p>
+  <p>வீரம் என்றும் அழியாது!</p>
+</header>
+
+<main>
+  <div class="intro">
+    <h2>வீரர்களின் வரலாறு</h2>
+    <p>நம் மண்ணின் மாவீரர்களை அறிந்துகொள்வோம்!</p>
+  </div>
+
+  <div class="grid" id="heroes"></div>
+  <section id="details" aria-live="polite">
+    <h2 id="heroName"></h2>
+    <p id="heroStory"></p>
+    <button onclick="closeDetails()">மீண்டும் முகப்புக்குச் செல்ல</button>
+  </section>
+</main>
+
+<footer>
+  <p>Historical Heroes</p>
+  <p>Subscribe • Learn • Remember</p>
+  <p>வீரம் என்றும் அழியாது!</p>
+</footer>
+
 <script>
-function showHero(hero){
-document.getElementById('name').innerText=hero;
-const info={
-'வேலு நாச்சியார்':'ஆங்கிலேயர்களை எதிர்த்துப் போராடிய சிவகங்கை அரசி.',
-'குயிலி':'வேலு நாச்சியாரின் படையில் வீரத்துடன் போரிட்ட வீராங்கனை.',
-'வீரபாண்டிய கட்டபொம்மன்':'ஆங்கிலேய ஆட்சியை எதிர்த்துப் போராடிய பாஞ்சாலங்குறிச்சி வீரர்.'
-};
-document.getElementById('info').innerText=info[hero];
+const data = [
+ {name:"வேலு நாச்சியார்",emoji:"👑",
+ story:"சிவகங்கை அரசியான வேலு நாச்சியார், ஆங்கிலேயருக்கு எதிராகப் போராடிய வீரமங்கை. தனது நாட்டை மீட்கப் படைகளைத் திரட்டி துணிச்சலுடன் போரிட்டார்."},
+ {name:"குயிலி",emoji:"🛡️",
+ story:"குயிலி, வேலு நாச்சியாரின் படையில் வீரத்துடன் செயல்பட்டவர். சிவகங்கை விடுதலைப் போராட்டத்தில் அவரது தியாகம் நினைவுகூரப்படுகிறது."},
+ {name:"மருது சகோதரர்கள்",emoji:"⚔️",
+ story:"பெரிய மருது, சின்ன மருது ஆகியோர் ஆங்கிலேய ஆதிக்கத்திற்கு எதிராகப் போராடினர். தென்னிந்திய விடுதலைப் போராட்ட வரலாற்றில் முக்கிய இடம் பெற்றவர்கள்."},
+ {name:"வீரபாண்டிய கட்டபொம்மன்",emoji:"🏹",
+ story:"பாஞ்சாலங்குறிச்சியின் பாளையக்காரரான கட்டபொம்மன், ஆங்கிலேயரின் வரிவிதிப்பு மற்றும் ஆதிக்கத்திற்கு எதிராக நின்றார்."},
+ {name:"பூலித்தேவன்",emoji:"🐅",
+ story:"பூலித்தேவன் ஆங்கிலேய ஆதிக்கத்திற்கு எதிராகப் போராடிய பாளையக்காரர்களில் ஒருவர். அவரது எதிர்ப்புப் போராட்டம் தமிழக வரலாற்றில் குறிப்பிடத்தக்கது."},
+ {name:"கோபால நாயக்கர்",emoji:"🗡️",
+ story:"கோபால நாயக்கர் ஆங்கிலேயருக்கு எதிரான எதிர்ப்புப் போராட்டங்களில் பங்கேற்ற தென்னிந்தியத் தலைவர்களில் ஒருவர்."}
+];
+
+const list = document.getElementById("heroes");
+data.forEach((hero,i)=>{
+ const card=document.createElement("article");
+ card.className="hero";
+ const pic=document.createElement("div");
+ pic.className="pic";
+ pic.textContent=hero.emoji;
+ const name=document.createElement("h2");
+ name.textContent=hero.name;
+ const btn=document.createElement("button");
+ btn.textContent="வரலாறு படிக்க";
+ btn.onclick=()=>showDetails(i);
+ card.append(pic,name,btn);
+ list.appendChild(card);
+});
+
+function showDetails(i){
+ document.getElementById("heroName").textContent=data[i].name;
+ document.getElementById("heroStory").textContent=data[i].story;
+ document.getElementById("details").style.display="block";
+ document.getElementById("details").scrollIntoView({behavior:"smooth"});
+}
+function closeDetails(){
+ document.getElementById("details").style.display="none";
+ window.scrollTo({top:0,behavior:"smooth"});
 }
 </script>
 </body>
