@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#17152b">
+<title>Historical Heroes AI Studio</title>
+<style>
+:root{color-scheme:dark;--bg:#11111b;--card:#1c1b2b;--gold:#f2c66d;--muted:#c1bfd0}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(160deg,#19172b,#101018 60%);font-family:system-ui,-apple-system,sans-serif;color:#fff}
+header{padding:22px 18px 16px;background:#17152b;border-bottom:1px solid #353149}
+h1{font-size:22px;margin:0 0 6px;color:var(--gold)} header p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+main{max-width:720px;margin:auto;padding:16px;display:grid;gap:14px}
+.card{background:var(--card);border:1px solid #343148;border-radius:16px;padding:15px}
+h2{font-size:16px;margin:0 0 12px}
+label{display:block;font-size:14px;margin:10px 0 6px;color:#e8e5f1}
+input,select,button{font:inherit}
+input[type=file],select{width:100%;padding:12px;background:#12121d;color:white;border:1px solid #45425c;border-radius:10px}
+input[type=range]{width:100%;accent-color:var(--gold)}
+button{border:0;border-radius:12px;padding:13px 15px;font-weight:700;cursor:pointer}
+.primary{background:var(--gold);color:#241b08;width:100%}
+.secondary{background:#343149;color:#fff;width:100%}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+canvas{display:block;width:100%;aspect-ratio:9/16;background:#090910;border-radius:12px;object-fit:contain}
+.note{font-size:12px;line-height:1.55;color:var(--muted)}
+.status{margin-top:10px;color:var(--gold);font-size:13px;min-height:20px}
+.pill{display:inline-block;border:1px solid #4d4865;border-radius:999px;padding:4px 8px;color:#ddd6ef;font-size:11px;margin-bottom:8px}
+a{color:var(--gold)}
+</style>
+</head>
+<body>
+<header>
+  <h1>🏹 Historical Heroes AI Studio</h1>
+  <p>உங்கள் படங்களை இயக்கத்துடன் கூடிய வரலாற்று Shorts ஆக மாற்றுவதற்கான முதல் இலவச பதிப்பு.</p>
+</header>
+<main>
+  <section class="card">
+    <span class="pill">பதிப்பு 1 · மொபைலில் இயங்கும்</span>
+    <h2>1. உங்கள் படத்தைத் தேர்வு செய்யுங்கள்</h2>
+    <input id="file" type="file" accept="image/*">
+    <p class="note">உங்கள் படம் இந்தப் பக்கத்திலேயே செயலாக்கப்படும். இந்த முதல் பதிப்பில் படம் வெளிப்புற சேவைக்கு அனுப்பப்படாது.</p>
+  </section>
+  <section class="card">
+    <h2>2. Camera இயக்கத்தைத் தேர்வு செய்யுங்கள்</h2>
+    <label for="effect">விளைவு</label>
+    <select id="effect">
+      <option value="zoom">Cinematic Zoom In — மெதுவாக அருகில்</option>
+      <option value="out">Zoom Out — மெதுவாகப் பின்னால்</option>
+      <option value="pan">Pan — பக்கவாட்டில் நகர்வு</option>
+      <option value="rise">Rise — கீழிருந்து மேலே</option>
+      <option value="shake">Battle Camera — லேசான அதிர்வு</option>
+      <option value="kenburns">Cinematic Motion — Zoom + Pan</option>
+    </select>
+    <label for="duration">வீடியோ நீளம்: <strong id="durLabel">6 வினாடிகள்</strong></label>
+    <input id="duration" type="range" min="4" max="15" value="6">
+    <label for="strength">இயக்கத்தின் அளவு: <strong id="strLabel">நடுத்தரம்</strong></label>
+    <input id="strength" type="range" min="1" max="10" value="5">
+    <div class="row">
+      <button id="preview" class="secondary">▶ Preview</button>
+      <button id="stop" class="secondary">■ நிறுத்து</button>
+    </div>
+  </section>
+  <section class="card">
+    <h2>3. வீடியோவை உருவாக்குங்கள்</h2>
+    <canvas id="canvas" width="540" height="960"></canvas>
+    <p class="note">வீடியோவை உருவாக்கியதும் பதிவிறக்கப் பொத்தான் வரும். Android Chrome-ல் பொதுவாக WebM வடிவில் சேமிக்கப்படும்; இது MP4 அல்ல.</p>
+    <button id="export" class="primary">⬇ வீடியோவை உருவாக்கி சேமிக்கவும்</button>
+    <div id="status" class="status" role="status">முதலில் ஒரு படத்தைத் தேர்வு செய்யுங்கள்.</div>
+    <div id="downloadArea"></div>
+  </section>
+  <section class="card">
+    <h2>அடுத்த பதிப்பில்</h2>
+    <p class="note">இந்தப் பதிப்பில் படம், camera movement, video export உள்ளன. வீரர் உண்மையாக நடப்பது அல்லது குதிரை ஓடுவது போன்ற AI இயக்கம் இன்னும் சேர்க்கப்படவில்லை. அதற்கு இலவசமாக இயங்கக்கூடிய AI மாடல் அல்லது சேவை தேவைப்படும்; அதை அடுத்த கட்டமாகப் பார்க்கலாம்.</p>
+  </section>
+</main>
+<script>
+(() => {
+ const fileInput=document.getElementById('file'), canvas=document.getElementById('canvas'), ctx=canvas.getContext('2d');
+ const effect=document.getElementById('effect'), duration=document.getElementById('duration'), strength=document.getElementById('strength');
+ const status=document.getElementById('status'), durLabel=document.getElementById('durLabel'), strLabel=document.getElementById('strLabel');
+ let img=null, raf=0, startTime=0, previewing=false, objectUrl=null;
+ function setStatus(s){status.textContent=s}
+ duration.addEventListener('input',()=>durLabel.textContent=duration.value+' வினாடிகள்');
+ strength.addEventListener('input',()=>{const v=+strength.value;strLabel.textContent=v<4?'மெதுவாக':v<8?'நடுத்தரம்':'அதிகம்'});
+ fileInput.addEventListener('change',()=>{
+   const f=fileInput.files&&fileInput.files[0]; if(!f)return;
+   if(objectUrl)URL.revokeObjectURL(objectUrl);
+   objectUrl=URL.createObjectURL(f); const im=new Image();
+   im.onload=()=>{img=im;draw(0);setStatus('படம் தயார்! Preview பார்க்கலாம்.');};
+   im.onerror=()=>setStatus('இந்தப் படத்தைத் திறக்க முடியவில்லை. வேறு படத்தைத் தேர்வு செய்யுங்கள்.');
+   im.src=objectUrl;
+ });
+ function draw(t){
+   const W=canvas.width,H=canvas.height;
+   ctx.fillStyle='#090910';ctx.fillRect(0,0,W,H);
+   if(!img){ctx.fillStyle='#c1bfd0';ctx.textAlign='center';ctx.font='28px system-ui';ctx.fillText('உங்கள் படத்தைத் தேர்வு செய்யுங்கள்',W/2,H/2);return;}
+   const base=Math.max(W/img.width,H/img.height);
+   const s=+strength.value/5, e=effect.value;
+   let z=1, px=0,py=0;
+   if(e==='zoom'){z=1+0.18*s*t;}
+   if(e==='out'){z=1+0.18*s*(1-t);}
+   if(e==='pan'){z=1+0.12*s;px=(t-.5)*W*.14*s;}
+   if(e==='rise'){z=1+0.12*s;py=(.5-t)*H*.12*s;}
+   if(e==='shake'){z=1+0.08*s;px=Math.sin(t*45)*4*s;py=Math.cos(t*37)*3*s;}
+   if(e==='kenburns'){z=1+0.16*s*t;px=(t-.5)*W*.10*s;py=(.5-t)*H*.05*s;}
+   const dw=img.width*base*z,dh=img.height*base*z;
+   ctx.save();ctx.translate(W/2+px,H/2+py);ctx.drawImage(img,-dw/2,-dh/2,dw,dh);ctx.restore();
+   const vg=ctx.createLinearGradient(0,0,0,H);vg.addColorStop(0,'rgba(0,0,0,.12)');vg.addColorStop(.7,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,.22)');ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
+ }
+ function animate(now){
+   if(!previewing)return;
+   const elapsed=(now-startTime)/1000, d=+duration.value, t=Math.min(1,elapsed/d);
+   draw(t);
+   if(t>=1){previewing=false;return;}
+   raf=requestAnimationFrame(animate);
+ }
+ document.getElementById('preview').addEventListener('click',()=>{
+   if(!img){setStatus('முதலில் படத்தைத் தேர்வு செய்யுங்கள்.');return;}
+   cancelAnimationFrame(raf);previewing=true;startTime=performance.now();raf=requestAnimationFrame(animate);setStatus('Preview இயங்குகிறது…');
+ });
+ document.getElementById('stop').addEventListener('click',()=>{previewing=false;cancelAnimationFrame(raf);draw(0);setStatus('நிறுத்தப்பட்டது.');});
+ document.getElementById('export').addEventListener('click',async()=>{
+   if(!img){setStatus('முதலில் படத்தைத் தேர்வு செய்யுங்கள்.');return;}
+   if(!canvas.captureStream||!window.MediaRecorder){setStatus('இந்த உலாவியில் வீடியோ பதிவு ஆதரவு இல்லை. Chrome-ல் திறந்து முயற்சிக்கவும்.');return;}
+   previewing=false;cancelAnimationFrame(raf);draw(0);
+   let mime='video/webm;codecs=vp9';
+   if(!MediaRecorder.isTypeSupported(mime))mime='video/webm';
+   if(!MediaRecorder.isTypeSupported(mime)){setStatus('இந்த மொபைல் உலாவியில் WebM பதிவு கிடைக்கவில்லை.');return;}
+   const stream=canvas.captureStream(30);let chunks=[];
+   let recorder;
+   try{recorder=new MediaRecorder(stream,{mimeType:mime});}catch(e){setStatus('பதிவைத் தொடங்க முடியவில்லை. Chrome-ல் முயற்சிக்கவும்.');return;}
+   document.getElementById('downloadArea').innerHTML='';
+   recorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
+   recorder.onerror=()=>setStatus('பதிவில் பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.');
+   recorder.onstop=()=>{
+     stream.getTracks().forEach(tr=>tr.stop());
+     const blob=new Blob(chunks,{type:mime}), url=URL.createObjectURL(blob);
+     const a=document.createElement('a');a.href=url;a.download='historical-heroes-short.webm';a.textContent='⬇ வீடியோவைப் பதிவிறக்கவும்';a.style.cssText='display:block;text-align:center;padding:14px;margin-top:10px;border-radius:10px;background:#f2c66d;color:#241b08;font-weight:bold;text-decoration:none';
+     document.getElementById('downloadArea').appendChild(a);
+     setStatus('வீடியோ தயாராகிவிட்டது! பதிவிறக்கப் பொத்தானை அழுத்துங்கள்.');
+   };
+   recorder.start();setStatus('வீடியோ உருவாகிறது… இந்தப் பக்கத்தை மூட வேண்டாம்.');
+   const t0=performance.now(), dur=+duration.value*1000;
+   function recordFrame(now){
+     const t=Math.min(1,(now-t0)/dur);draw(t);
+     if(t<1)requestAnimationFrame(recordFrame);else setTimeout(()=>{if(recorder.state!=='inactive')recorder.stop();},150);
+   }
+   requestAnimationFrame(recordFrame);
+ });
+ draw(0);
+})();
+</script>
+</body>
+</html>
